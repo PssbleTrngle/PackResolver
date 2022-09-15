@@ -1,6 +1,6 @@
 {
    "name": "@pssbletrngle/pack-resolver",
-   "version": "1.0.2",
+   "version": "0.0.0-dev",
    "description": "Pack Resolver",
    "type": "module",
    "packageManager": "pnpm@7.9.5",
