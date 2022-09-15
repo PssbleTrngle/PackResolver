@@ -1,5 +1,5 @@
 import StreamZip from 'node-stream-zip'
-import IResolver, { Acceptor } from './IResolver.js'
+import { Acceptor, IResolver } from './IResolver.js'
 
 export default class ArchiveResolver implements IResolver {
    constructor(private readonly archive: string) {}

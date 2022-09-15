@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { listChildren } from '../util.js'
-import IResolver, { Acceptor } from './IResolver.js'
+import { Acceptor, IResolver } from './IResolver.js'
 
 export default class FolderResolver implements IResolver {
    constructor(private readonly folder: string) {}

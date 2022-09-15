@@ -1,4 +1,4 @@
-export default interface IResolver {
+export interface IResolver {
    extract(acceptor: Acceptor): Promise<void>
 }
 
