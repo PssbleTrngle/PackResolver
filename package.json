@@ -4,9 +4,12 @@
    "description": "Pack Resolver",
    "type": "module",
    "packageManager": "pnpm@7.9.5",
-   "main": "dist/index.js",
+   "main": "./dist/index.js",
    "exports": "./dist/index.js",
-   "types": "dist/index.d.ts",
+   "types": "./dist/index.d.ts",
+   "files": [
+      "dist"
+   ],
    "scripts": {
       "build": "tsc"
    },
