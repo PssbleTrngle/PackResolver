@@ -34,5 +34,7 @@ export default async function createResolvers(options: Options, config: Config =
       .flatMap(file => resolversOf(file).map(resolver => ({ ...file, resolver })))
       .filter(exists)
 
-   console.log(`Found ${resolvers.length} resource packs`)
+   console.log(`Found ${resolvers.length} resource/data packs`)
+
+   return resolvers
 }
