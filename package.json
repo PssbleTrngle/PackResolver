@@ -1,0 +1,36 @@
+{
+   "name": "@pssbletrngle/pack-resolver",
+   "version": "1.0.0",
+   "description": "Pack Resolver",
+   "type": "module",
+   "packageManager": "pnpm@7.9.5",
+   "scripts": {
+      "build": "tsc"
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/PssbleTrngle/PackResolver.git"
+   },
+   "publishConfig": {
+      "registry": "https://npm.pkg.github.com"
+   },
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/PssbleTrngle/PackResolver/issues"
+   },
+   "homepage": "https://github.com/PssbleTrngle/PackResolver#readme",
+   "devDependencies": {
+      "@types/fs-extra": "^9.0.13",
+      "@types/lodash": "^4.14.184",
+      "@types/node": "^17.0.45",
+      "eslint": "^8.23.0",
+      "prettier": "^2.7.1",
+      "ts-node": "^10.9.1"
+   },
+   "dependencies": {
+      "fs-extra": "^10.1.0",
+      "lodash": "^4.17.21",
+      "node-stream-zip": "^1.15.0",
+      "typescript": "^4.8.2"
+   }
+}

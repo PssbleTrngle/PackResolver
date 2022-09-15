@@ -1,0 +1,5 @@
+export * as Options from './options'
+export * as ArchiveResolver from './resolver/ArchiveResolver'
+export * as FolderResolver from './resolver/FolderResolver'
+export * as IResolver from './resolver/IResolver'
+export * from './util'
