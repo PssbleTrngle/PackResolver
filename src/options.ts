@@ -1,3 +1,4 @@
 export default interface Options {
-   from: string
+   from: string | string[]
+   exclude?: string | string[]
 }

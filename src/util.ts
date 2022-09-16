@@ -19,3 +19,8 @@ export function listChildren(dir: string) {
 export function fileHash(content: Buffer, type = 'sha256') {
    return crypto.createHash(type).update(content).digest('hex')
 }
+
+export function arrayOrSelf<T>(value?: T | T[]) {
+   if (!value) return []
+   return Array.isArray(value) ? value : [value]
+}
