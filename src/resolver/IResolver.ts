@@ -3,5 +3,5 @@ export interface IResolver {
 }
 
 export interface Acceptor {
-   (path: string, content: Buffer): void
+   (path: string, content: Buffer | string): void
 }
