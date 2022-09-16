@@ -8,7 +8,7 @@ import ArchiveResolver from './ArchiveResolver.js'
 import FolderResolver from './FolderResolver.js'
 import { IResolver } from './IResolver.js'
 
-interface ResolverInfo {
+export interface ResolverInfo {
    resolver: IResolver
    name: string
 }

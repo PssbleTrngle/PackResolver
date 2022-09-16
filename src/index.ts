@@ -1,6 +1,6 @@
 export { default as Options } from './options.js'
 export { default as ArchiveResolver } from './resolver/ArchiveResolver.js'
 export { default as FolderResolver } from './resolver/FolderResolver.js'
-export { default as createResolvers } from './resolver/index.js'
+export { default as createResolvers, ResolverInfo } from './resolver/index.js'
 export * from './resolver/IResolver.js'
 export * from './util.js'
