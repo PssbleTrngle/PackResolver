@@ -1,6 +1,5 @@
-import minimatch from 'minimatch'
-import Options from '../options.js'
-import { arrayOrSelf } from '../util.js'
+import { createFilter } from '../filter.js'
+import { FilterOptions } from '../options.js'
 
 export interface IResolver {
    extract(acceptor: Acceptor): Promise<void>
@@ -11,18 +10,17 @@ export interface Acceptor {
 }
 
 export abstract class FilteringResolver implements IResolver {
-   private readonly exlude: string[]
+   private readonly filter
 
-   constructor(exlude: Options['exclude']) {
-      this.exlude = arrayOrSelf(exlude)
+   constructor(options: FilterOptions) {
+      this.filter = createFilter(options)
    }
 
    abstract accept(acceptor: Acceptor): Promise<void>
 
    async extract(acceptor: Acceptor) {
       return this.accept((path, content) => {
-         if (this.exlude.some(pattern => minimatch(path, pattern, { dot: true }))) return false
-         return acceptor(path, content)
+         return this.filter(path) && acceptor(path, content)
       })
    }
 }

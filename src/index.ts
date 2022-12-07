@@ -1,4 +1,5 @@
-export { default as Options } from './options.js'
+export { createFilter } from './filter.js'
+export { default as Options, FilterOptions } from './options.js'
 export { default as ArchiveResolver } from './resolver/ArchiveResolver.js'
 export { default as FolderResolver } from './resolver/FolderResolver.js'
 export { default as createResolvers, ResolverInfo } from './resolver/index.js'

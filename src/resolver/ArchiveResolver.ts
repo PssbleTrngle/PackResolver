@@ -1,10 +1,10 @@
 import StreamZip from 'node-stream-zip'
-import Options from '../options.js'
+import { FilterOptions } from '../options.js'
 import { Acceptor, FilteringResolver } from './IResolver.js'
 
 export default class ArchiveResolver extends FilteringResolver {
-   constructor(private readonly archive: string, exlude: Options['exclude']) {
-      super(exlude)
+   constructor(private readonly archive: string, options: FilterOptions) {
+      super(options)
    }
 
    async accept(acceptor: Acceptor) {

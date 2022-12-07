@@ -1,4 +1,8 @@
-export default interface Options {
-   from: string | string[]
+export interface FilterOptions {
    exclude?: string | string[]
+   include?: string | string[]
+}
+
+export default interface Options extends FilterOptions {
+   from: string | string[]
 }

@@ -26,15 +26,13 @@ function createResolverFor(
       .map(it => ({ ...it, config: config.packs[it.name] }))
       .filter(it => !it.config?.disabled)
 
-   const exlude = arrayOrSelf(options.exclude)
-
    function resolversOf({ path, name, info }: typeof packs[0]) {
       const paths = ['.']
       return paths
          .map(relativePath => {
             const realPath = join(path, relativePath)
-            if (info.isFile() && ['.zip', '.jar'].includes(extname(name))) return new ArchiveResolver(realPath, exlude)
-            if (info.isDirectory()) return new FolderResolver(realPath, exlude)
+            if (info.isFile() && ['.zip', '.jar'].includes(extname(name))) return new ArchiveResolver(realPath, options)
+            if (info.isDirectory()) return new FolderResolver(realPath, options)
             return null
          })
          .filter(exists)
