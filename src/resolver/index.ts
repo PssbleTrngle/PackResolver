@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import lodash from 'lodash'
 import { extname, join, resolve } from 'path'
-import { Config, getConfig } from '../config.js'
+import { getConfig, PacksConfig } from '../config.js'
 import Options from '../options.js'
 import { arrayOrSelf, exists, listChildren } from '../util.js'
 import ArchiveResolver from './ArchiveResolver.js'
@@ -16,7 +16,7 @@ export interface ResolverInfo {
 function createResolverFor(
    options: Omit<Options, 'from'>,
    from: string,
-   config: Config = getConfig(from)
+   config: PacksConfig = getConfig(from)
 ): ResolverInfo[] {
    if (!existsSync(from)) {
       throw new Error(`input directory not found: ${resolve(from)}`)
@@ -40,14 +40,34 @@ function createResolverFor(
 
    const resolvers = lodash
       .orderBy(packs, it => it.config?.priority ?? 0)
-      .flatMap(file => resolversOf(file).map(resolver => ({ ...file, resolver })))
+      .flatMap(file => resolversOf(file).map(resolver => ({ resolver, name: file.name })))
       .filter(exists)
 
    return resolvers
 }
 
-export default function createResolvers(options: Options, config?: Config) {
+export function mergeResolvers(resolvers: Array<IResolver | ResolverInfo>, async = true): IResolver {
+   const realResolvers = resolvers.map(it => ('extract' in it ? it : it.resolver))
+   return {
+      extract: async acceptor => {
+         if (async) {
+            await Promise.all(realResolvers.map(it => it.extract(acceptor)))
+         } else {
+            for (let it of realResolvers) {
+               await it.extract(acceptor)
+            }
+         }
+      },
+   }
+}
+
+export function createResolvers(options: Options, config?: PacksConfig) {
    const resolvers = arrayOrSelf(options.from).flatMap(from => createResolverFor(options, from, config))
    console.log(`Found ${resolvers.length} resource/data packs`)
    return resolvers
+}
+
+export function createResolver(options: Options & { async?: boolean }, config?: PacksConfig) {
+   const resolvers = createResolvers(options, config)
+   return mergeResolvers(resolvers, options.async)
 }

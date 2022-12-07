@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 
-export type Config = {
+export type PacksConfig = {
    packs: Record<string, PackConfig | undefined>
 }
 
@@ -11,7 +11,7 @@ export interface PackConfig {
    disabled?: boolean
 }
 
-export function getConfig(dir: string): Config {
+export function getConfig(dir: string): PacksConfig {
    const path = join(dir, 'config.json')
    if (!existsSync(path)) return { packs: {} }
    const raw = readFileSync(path).toString()
