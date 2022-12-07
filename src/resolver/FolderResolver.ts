@@ -5,7 +5,7 @@ import { listChildren } from '../util.js'
 import { Acceptor, FilteringResolver } from './IResolver.js'
 
 export default class FolderResolver extends FilteringResolver {
-   constructor(private readonly folder: string, options: FilterOptions) {
+   constructor(private readonly folder: string, options: FilterOptions = {}) {
       super(options)
    }
 

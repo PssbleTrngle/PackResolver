@@ -6,7 +6,7 @@ import Options from '../options.js'
 import { arrayOrSelf, exists, listChildren } from '../util.js'
 import ArchiveResolver from './ArchiveResolver.js'
 import FolderResolver from './FolderResolver.js'
-import { IResolver } from './IResolver.js'
+import { Acceptor, IResolver } from './IResolver.js'
 
 export interface ResolverInfo {
    resolver: IResolver
@@ -47,14 +47,19 @@ function createResolverFor(
 }
 
 export function mergeResolvers(resolvers: Array<IResolver | ResolverInfo>, async = true): IResolver {
-   const realResolvers = resolvers.map(it => ('extract' in it ? it : it.resolver))
+   const runners = resolvers.map(it => (acceptor: Acceptor) => {
+      if ('extract' in it) return it.extract(acceptor)
+      console.log(it.name)
+      return it.resolver.extract(acceptor)
+   })
+
    return {
       extract: async acceptor => {
          if (async) {
-            await Promise.all(realResolvers.map(it => it.extract(acceptor)))
+            await Promise.all(runners.map(run => run(acceptor)))
          } else {
-            for (let it of realResolvers) {
-               await it.extract(acceptor)
+            for (let run of runners) {
+               await run(acceptor)
             }
          }
       },

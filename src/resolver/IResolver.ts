@@ -12,7 +12,7 @@ export interface Acceptor {
 export abstract class FilteringResolver implements IResolver {
    private readonly filter
 
-   constructor(options: FilterOptions) {
+   constructor(options: FilterOptions = {}) {
       this.filter = createFilter(options)
    }
 

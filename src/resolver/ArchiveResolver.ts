@@ -3,7 +3,7 @@ import { FilterOptions } from '../options.js'
 import { Acceptor, FilteringResolver } from './IResolver.js'
 
 export default class ArchiveResolver extends FilteringResolver {
-   constructor(private readonly archive: string, options: FilterOptions) {
+   constructor(private readonly archive: string, options: FilterOptions = {}) {
       super(options)
    }
 
