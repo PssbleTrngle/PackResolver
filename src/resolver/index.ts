@@ -61,7 +61,7 @@ export function mergeResolvers(
          if (options?.async !== false) {
             await Promise.all(runners.map(run => run(acceptor)))
          } else {
-            for (let run of runners) {
+            for (const run of runners) {
                await run(acceptor)
             }
          }
