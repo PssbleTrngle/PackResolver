@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import lodash from 'lodash'
 import { extname, join, resolve } from 'path'
-import { getConfig, PacksConfig } from '../config.js'
+import { PacksConfig, getConfig } from '../config.js'
 import Options from '../options.js'
 import { arrayOrSelf, exists, listChildren } from '../util.js'
 import ArchiveResolver from './ArchiveResolver.js'
@@ -46,16 +46,19 @@ function createResolverFor(
    return resolvers
 }
 
-export function mergeResolvers(resolvers: Array<IResolver | ResolverInfo>, async = true): IResolver {
+export function mergeResolvers(
+   resolvers: Array<IResolver | ResolverInfo>,
+   options?: Options & { async?: boolean }
+): IResolver {
    const runners = resolvers.map(it => (acceptor: Acceptor) => {
       if ('extract' in it) return it.extract(acceptor)
-      console.log(it.name)
+      if (!options?.silent) console.log(it.name)
       return it.resolver.extract(acceptor)
    })
 
    return {
       extract: async acceptor => {
-         if (async) {
+         if (options?.async !== false) {
             await Promise.all(runners.map(run => run(acceptor)))
          } else {
             for (let run of runners) {
@@ -68,11 +71,11 @@ export function mergeResolvers(resolvers: Array<IResolver | ResolverInfo>, async
 
 export function createResolvers(options: Options, config?: PacksConfig) {
    const resolvers = arrayOrSelf(options.from).flatMap(from => createResolverFor(options, from, config))
-   console.log(`Found ${resolvers.length} resource/data packs`)
+   if (!options.silent) console.log(`Found ${resolvers.length} resource/data packs`)
    return resolvers
 }
 
 export function createResolver(options: Options & { async?: boolean }, config?: PacksConfig) {
    const resolvers = createResolvers(options, config)
-   return mergeResolvers(resolvers, options.async)
+   return mergeResolvers(resolvers, options)
 }

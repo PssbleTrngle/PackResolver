@@ -131,6 +131,7 @@ dist
 
 tmp
 resources
+!test/resources
 merged
 merged.zip
 replacements.json

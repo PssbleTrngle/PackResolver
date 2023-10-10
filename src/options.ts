@@ -5,4 +5,5 @@ export interface FilterOptions {
 
 export default interface Options extends FilterOptions {
    from: string | string[]
+   silent?: boolean
 }
