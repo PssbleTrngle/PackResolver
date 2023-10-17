@@ -8,7 +8,7 @@ export default {
       '(.+)\\.js': '$1',
    },
    transform: {
-      '^.+\\.[jt]s$': [
+      '^.+\\.ts$': [
          'ts-jest',
          {
             useESM: true,
