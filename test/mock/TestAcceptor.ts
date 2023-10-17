@@ -1,6 +1,6 @@
 import { sep } from 'path'
 import { join } from 'path/posix'
-import { Acceptor } from '../../src'
+import { Acceptor } from '../../src/index.js'
 
 export interface TestAcceptor extends Acceptor {
    at(path: string): string | null

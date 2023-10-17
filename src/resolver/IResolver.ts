@@ -10,7 +10,7 @@ export interface Acceptor {
 }
 
 export abstract class FilteringResolver implements IResolver {
-   private readonly filter
+   protected readonly filter
 
    constructor(options: FilterOptions = {}) {
       this.filter = createFilter(options)
@@ -20,7 +20,7 @@ export abstract class FilteringResolver implements IResolver {
 
    async extract(acceptor: Acceptor) {
       return this.accept((path, content) => {
-         return this.filter(path) && acceptor(path, content)
+         return acceptor(path, content)
       })
    }
 }

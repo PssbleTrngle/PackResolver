@@ -1,5 +1,5 @@
-import createTestAcceptor from './mock/TestAcceptor'
-import createTestResolver from './mock/TestResolver'
+import createTestAcceptor from './mock/TestAcceptor.js'
+import createTestResolver from './mock/TestResolver.js'
 
 describe('filters using include option', () => {
    it('filters using single include', async () => {

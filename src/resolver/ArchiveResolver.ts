@@ -12,11 +12,13 @@ export default class ArchiveResolver extends FilteringResolver {
       const entries = await zip.entries()
 
       await Promise.all(
-         Object.values(entries).map(async entry => {
-            if (entry.isFile) {
-               acceptor(entry.name, await zip.entryData(entry))
-            }
-         })
+         Object.values(entries)
+            .filter(it => this.filter(it.name))
+            .map(async entry => {
+               if (entry.isFile) {
+                  acceptor(entry.name, await zip.entryData(entry))
+               }
+            })
       )
 
       await zip.close()

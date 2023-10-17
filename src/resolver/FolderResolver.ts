@@ -13,10 +13,16 @@ export default class FolderResolver extends FilteringResolver {
       const children = listChildren(join(this.folder, path))
 
       const files = children.filter(it => it.info.isFile())
-      files.forEach(it => acceptor(join(path, it.name), readFileSync(it.path)))
+      files.forEach(it => {
+         const relative = join(path, it.name)
+         if (this.filter(relative)) acceptor(relative, readFileSync(it.path))
+      })
 
       const folders = children.filter(it => it.info.isDirectory())
-      folders.forEach(it => this.recursiveExtract(acceptor, join(path, it.name)))
+      folders.forEach(it => {
+         const relative = join(path, it.name)
+         if (this.filter(relative, { partial: true })) this.recursiveExtract(acceptor, relative)
+      })
    }
 
    async accept(acceptor: Acceptor) {
