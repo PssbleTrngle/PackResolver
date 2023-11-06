@@ -1,9 +1,9 @@
-import { existsSync } from 'fs'
+import { existsSync, statSync } from 'fs'
 import lodash from 'lodash'
-import { extname, join, resolve } from 'path'
+import { extname, resolve } from 'path'
 import { PacksConfig, getConfig } from '../config.js'
-import Options from '../options.js'
-import { arrayOrSelf, exists, listChildren } from '../util.js'
+import Options, { FilterOptions } from '../options.js'
+import { PathInfo, arrayOrSelf, exists, listChildren } from '../util.js'
 import ArchiveResolver from './ArchiveResolver.js'
 import FolderResolver from './FolderResolver.js'
 import { Acceptor, IResolver } from './IResolver.js'
@@ -13,7 +13,29 @@ export interface ResolverInfo {
    name: string
 }
 
-function createResolverFor(
+function tryCreateResolver({ path, info }: Omit<PathInfo, 'name'>, options: FilterOptions) {
+   if (info.isFile() && ['.zip', '.jar'].includes(extname(path))) return new ArchiveResolver(path, options)
+   if (info.isDirectory()) return new FolderResolver(path, options)
+   return null
+}
+
+type SingleOptions = Omit<Options, 'from'> & {
+   from: string
+}
+
+export function createResolver(options: SingleOptions) {
+   const path = options.from
+   const info = statSync(path)
+   const resolver = tryCreateResolver({ path, info }, options)
+
+   if (!resolver) {
+      throw new Error(`unable to create resolver for ${path}`)
+   }
+
+   return resolver
+}
+
+function createResolversFor(
    options: Omit<Options, 'from'>,
    from: string,
    config: PacksConfig = getConfig(from)
@@ -26,21 +48,12 @@ function createResolverFor(
       .map(it => ({ ...it, config: config.packs[it.name] }))
       .filter(it => !it.config?.disabled)
 
-   function resolversOf({ path, name, info }: typeof packs[0]) {
-      const paths = ['.']
-      return paths
-         .map(relativePath => {
-            const realPath = join(path, relativePath)
-            if (info.isFile() && ['.zip', '.jar'].includes(extname(name))) return new ArchiveResolver(realPath, options)
-            if (info.isDirectory()) return new FolderResolver(realPath, options)
-            return null
-         })
-         .filter(exists)
-   }
-
    const resolvers = lodash
       .orderBy(packs, it => it.config?.priority ?? 0)
-      .flatMap(file => resolversOf(file).map(resolver => ({ resolver, name: file.name })))
+      .map(file => {
+         const resolver = tryCreateResolver(file, options)
+         return resolver && { resolver, name: file.name }
+      })
       .filter(exists)
 
    return resolvers
@@ -70,12 +83,12 @@ export function mergeResolvers(
 }
 
 export function createResolvers(options: Options, config?: PacksConfig) {
-   const resolvers = arrayOrSelf(options.from).flatMap(from => createResolverFor(options, from, config))
+   const resolvers = arrayOrSelf(options.from).flatMap(from => createResolversFor(options, from, config))
    if (!options.silent) console.log(`Found ${resolvers.length} resource/data packs`)
    return resolvers
 }
 
-export function createResolver(options: Options & { async?: boolean }, config?: PacksConfig) {
+export function createMergedResolver(options: Options & { async?: boolean }, config?: PacksConfig) {
    const resolvers = createResolvers(options, config)
    return mergeResolvers(resolvers, options)
 }

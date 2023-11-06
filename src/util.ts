@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { readdirSync, statSync } from 'fs'
+import { Stats, readdirSync, statSync } from 'fs'
 import lodash from 'lodash'
 import { join } from 'path'
 
@@ -7,7 +7,13 @@ export function exists<T>(value?: T | null): value is T {
    return (value ?? null) !== null
 }
 
-export function listChildren(dir: string) {
+export interface PathInfo {
+   path: string
+   name: string
+   info: Stats
+}
+
+export function listChildren(dir: string): PathInfo[] {
    const unsorted = readdirSync(dir).map(name => {
       const path = join(dir, name)
       const info = statSync(path)
