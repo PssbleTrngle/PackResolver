@@ -1,5 +1,3 @@
-import { sep } from 'path'
-import { join } from 'path/posix'
 import { Acceptor } from '../../src/index.js'
 
 export interface TestAcceptor extends Acceptor {
@@ -14,8 +12,7 @@ export default function createTestAcceptor(): TestAcceptor {
    const received = new Map<string, string>()
 
    const acceptor: TestAcceptor = (path, content) => {
-      const posixPath = join(...path.split(sep))
-      received.set(posixPath, content.toString())
+      received.set(path, content.toString())
       return true
    }
 

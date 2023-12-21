@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs'
-import { join } from 'path'
+import { join } from 'path/posix'
 import { FilterOptions } from '../options.js'
 import { listChildren } from '../util.js'
 import { Acceptor, FilteringResolver } from './IResolver.js'

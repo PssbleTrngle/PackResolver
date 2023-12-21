@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import { Stats, readdirSync, statSync } from 'fs'
 import lodash from 'lodash'
-import { join } from 'path'
+import { join } from 'path/posix'
 
 export function exists<T>(value?: T | null): value is T {
    return (value ?? null) !== null
